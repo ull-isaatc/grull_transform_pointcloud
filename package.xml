@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>grull_transform_pointcloud</name>
+  <version>0.0.0</version>
+  <description>Pointcloud transformation nodelet</description>
+  <maintainer email="javier@isaatc.ull.es">Javier Hernandez</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>nodelet</build_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>pcl_ros</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>nodelet</run_depend>
+  <export><nodelet plugin="${prefix}/nodelet_plugins.xml"/></export>
+</package>

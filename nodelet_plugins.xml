@@ -1,0 +1,7 @@
+<library path="lib/libtransform_pointcloud">
+  <class name="grull_transform_pointcloud/transform_pointcloud"
+         type="grull_transform_pointcloud::transform_pointcloud"
+         base_class_type="nodelet::Nodelet">
+    <description>Point cloud transformation nodelet.</description>
+  </class>
+</library>

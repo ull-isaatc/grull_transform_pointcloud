@@ -1,0 +1,59 @@
+<launch>
+
+  <!-- Input and output topics publish "sensor_msgs::PointCloud2" data -->
+
+  <arg name="input_topic"     default="input_topic"/>
+  <arg name="output_topic"    default="output_topic"/>
+  <arg name="target_frame"    default="target_frame"/>
+  <arg name="nodelet_manager" default="nodelet_manager"/>
+
+  <arg name="publish_tf"      default="false"/>
+  <arg name="launch_manager"  default="false"/>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ >
+
+  - Expected usage with velodyne_height_map.
+
+  1. Create a nodelet manager.
+
+  <node pkg="nodelet" type="nodelet" name="EXAMPLE_MANAGER" args="manager"/>
+
+  2. Include this launch file providing the required arguments.
+     The output topic must be "/velodyne_points".
+
+  <include file="$(find grull_transform_pointcloud)/launch/launch.launch">
+    <arg name="input_topic"     value="name_of_PointCloud2_topic"/>
+    <arg name="output_topic"    value="/velodyne_points"/>
+    <arg name="target_frame"    value="frame_id_of_the_world"/>
+    <arg name="nodelet_manager" value="EXAMPLE_MANAGER"/>
+  </include>
+
+  3. Start a velodyne_height_map nodelet.
+
+  <node pkg="nodelet" type="nodelet" name="heightmap_nodelet"
+        args="load velodyne_height_map/HeightMapNodelet EXAMPLE_MANAGER">
+    <param name="cell_size" value="0.1"/>
+    <remap from="velodyne_obstacles" to="obstacles"/>
+  </node>
+
+  < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  -->
+
+  <!-- Start a nodelet manager if needed -->
+  <node if="$(arg launch_manager)" pkg="nodelet" type="nodelet"
+        name="$(arg nodelet_manager)" args="manager"/>
+
+  <!-- Start transformation nodelet -->
+  <node pkg="nodelet" type="nodelet" name="transform_pointcloud"
+        args="load grull_transform_pointcloud/transform_pointcloud
+              $(arg nodelet_manager)">
+    <remap from="input_topic"  to="$(arg input_topic)"/>
+    <remap from="output_topic" to="$(arg output_topic)"/>
+    <param name="target_frame" value="$(arg target_frame)"/>
+  </node>
+
+  <!-- Public a static transform if needed -->
+  <node if="$(arg publish_tf)" name="v4l_transform" pkg="tf"
+        type="static_transform_publisher"
+        args="0 0 1 0 0 -1.57079632679 $(arg target_frame) v4l_frame 10"/>
+
+</launch>
