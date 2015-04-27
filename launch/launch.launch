@@ -6,6 +6,7 @@
   <arg name="output_topic"    default="output_topic"/>
   <arg name="target_frame"    default="target_frame"/>
   <arg name="nodelet_manager" default="nodelet_manager"/>
+  <arg name="nodelet_name"    default="transform_pointcloud"/>
 
   <arg name="publish_tf"      default="false"/>
   <arg name="launch_manager"  default="false"/>
@@ -15,7 +16,7 @@
         name="$(arg nodelet_manager)" args="manager"/>
 
   <!-- Start transformation nodelet -->
-  <node pkg="nodelet" type="nodelet" name="transform_pointcloud"
+  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_name)"
         args="load grull_transform_pointcloud/transform_pointcloud
               $(arg nodelet_manager)">
     <remap from="input_topic"  to="$(arg input_topic)"/>

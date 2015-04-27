@@ -14,8 +14,17 @@ namespace grull_transform_pointcloud {
     tf::TransformListener listener;
     void callback(const sensor_msgs::PointCloud2::ConstPtr &msg) {
       sensor_msgs::PointCloud2 output;
-      if (pcl_ros::transformPointCloud(target_frame, *msg, output, listener))
-        pub.publish(output);
+      output.header.stamp = msg->header.stamp;//ros::Time::now();
+      
+      try {
+//           listener.waitForTransform(target_frame, msg->header.frame_id, msg->header.stamp, ros::Duration(0.5));
+          listener.waitForTransform(target_frame, msg->header.frame_id, ros::Time(0), ros::Duration(10.0), ros::Duration(0.01));
+          if (pcl_ros::transformPointCloud(target_frame, *msg, output, listener)) {
+              pub.publish(output);
+          }
+      } catch (tf::TransformException ex) {
+          ROS_ERROR("%s",ex.what());
+      }
     }
   public:
     virtual void onInit() {
