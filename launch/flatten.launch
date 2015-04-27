@@ -1,0 +1,23 @@
+<launch>
+
+  <!-- Input and output topics publish "sensor_msgs::PointCloud2" data -->
+
+  <arg name="input_topic"     default="input_topic"/>
+  <arg name="output_topic"    default="output_topic"/>
+
+  <!-- Heights defined relative to original frame -->
+
+  <arg name="lowest_height"   default="-.5"/>
+  <arg name="highest_height"  default=".5"/>
+  <arg name="desired_height"  default="0"/>
+
+  <!-- Flatten node -->
+  <node pkg="grull_transform_pointcloud" type="flatten" name="flatten">
+    <remap from="input_topic"  to="$(arg input_topic)"/>
+    <remap from="output_topic" to="$(arg output_topic)"/>
+    <param name="lowest_height"  value="$(arg lowest_height)"/>
+    <param name="highest_height" value="$(arg highest_height)"/>
+    <param name="desired_height" value="$(arg desired_height)"/>
+  </node>
+
+</launch>
